@@ -1,0 +1,30 @@
+const mongoose = require('mongoose');
+require('dotenv').config()
+
+const express = require("express");
+const app = express();
+
+/* first parameter mongoose takes is the url string to connect to database where tshirt is name of database
+ all variables are attached in process. We define the env variables in .env file.
+ NOTE: .env file does not get uploaded to github */
+ 
+mongoose.connect(process.env.DATABASE,
+{ useNewUrlParser: true,    //this property is compulsory
+  useUnifiedTopology: true, //this helps in keeping db connection alive
+  useCreateIndex: true //there are couple of other properties check doc
+}).then(() => {
+    console.log("DB CONNECTED");
+});
+
+// myfun.run().then().catch()  in this then() runs if run() is satisfied or else caatch() is executed
+
+//const port = 8000;
+const port = process.env.PORT || 8000;
+
+app.listen(port, () =>{
+    console.log(' app is running at ${}port ');
+});
+
+/* One the most important things are environment variables so that when someone else is running the same
+project they can see the private keys the payment gateways and other stuff. Also when we deploy an application in real world we hide the 
+port nos. for protection using env variables ie: npm dotenv */
