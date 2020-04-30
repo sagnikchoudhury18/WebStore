@@ -2,7 +2,7 @@
 
 
 exports.signup = (req,res)=>{
-    console.log("REQ BODY",req.body); //we are able to do this because of bodyparser in app.js
+    console.log("REQ BODY",req.body); //we are able to do this because of bodyparser in app.js  
     res.json({
         message: "signup works ..!"
     });
