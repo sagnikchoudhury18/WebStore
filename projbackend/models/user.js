@@ -61,14 +61,13 @@ var uuidv1 = require('uuid/v1');
         return this._password;
     })
 
-  userSchema.method = {
-
+  userSchema.methods = {
     authenticate:  function(plainpassword){
         return this.securePassword(plainpassword) === this.encry_password  //if match is happening in password it will return true else false
     },
 
     securePassword: function(plainpassword){
-        if(!password) return "";
+        if(!plainpassword) return "";
         try{  
             return crypto.createHmac('sha256',this.salt)
             .update('I love cupcakes')
