@@ -13,7 +13,7 @@ const admin = (req, res) => {
 };
 
 const isAdmin = (req, res, next) => {
-  console.log("isAdmin is running");  //isAdmin is a middleware and its a customizable one as it has the next() method  
+  console.log("isAdmin is running");  //isAdmin is a middleware which is like a blackbox and its a customizable one as it has the next() method  
   next();
 };
 
