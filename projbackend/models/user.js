@@ -3,7 +3,7 @@ var crypto = require('crypto');
 var uuidv1 = require('uuid/v1');
 
 
-  var userSchema = new mongoose.Schema({
+var userSchema = new mongoose.Schema({
     
     name:{
         type: String,
@@ -29,6 +29,7 @@ var uuidv1 = require('uuid/v1');
         type: String,
         trim: true
     },
+
     //TODO
     encry_password:{  //this  is being stored in db
         type: String,
@@ -47,10 +48,12 @@ var uuidv1 = require('uuid/v1');
         default: []
     }
     
-  },{timestamps:true});
+  },
+  {timestamps:true}
+);
 
 
-  userSchema
+userSchema
     .virtual("password")
     .set(function(password){
          this._password = password  //in javascript private var is defined with an _
@@ -61,22 +64,23 @@ var uuidv1 = require('uuid/v1');
         return this._password;
     })
 
-  userSchema.methods = {
+userSchema.methods = {
     authenticate:  function(plainpassword){
-        return this.securePassword(plainpassword) === this.encry_password  //if match is happening in password it will return true else false
+        return this.securePassword(plainpassword) === this.encry_password;  //if match is happening in password it will return true else false
     },
 
     securePassword: function(plainpassword){
         if(!plainpassword) return "";
         try{  
-            return crypto.createHmac('sha256',this.salt)
-            .update('I love cupcakes')
+            return crypto
+            .createHmac('sha256',this.salt)
+            .update(plainpassword)
             .digest('hex');
         }
         catch(err){
             return "";
         }
     }
-  }
+  };
 
   module.exports = mongoose.model("User",userSchema) //what we want to call the userSchema as is mentioned within " "
