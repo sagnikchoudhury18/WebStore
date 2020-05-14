@@ -7,8 +7,9 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
-
+//My routes 
 const authRoutes = require("./routes/auth")   //authRoutes contains the destination where routes are defined in auth.js in routes folder
+const userRoutes = require("./routes/user")
 
 /*NOTE: first parameter mongoose takes is the url string to connect to database where tshirt is name of Database.
  All variables are attached in process. We define the env variables in .env file. Also the .env file does not get uploaded to github */
@@ -30,7 +31,7 @@ app.use(cors());
 
 //MY ROUTES
 app.use("/api",authRoutes);
-
+app.use("/api",userRoutes);
 
 //PORT
 const port = process.env.PORT || 8000; //const port = 8000;
