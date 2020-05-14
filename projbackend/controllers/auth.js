@@ -13,12 +13,13 @@ exports.signup = (req,res)=>{
         message: "signup works ..!"
     });*/
 
-    const errors = validationResult(req)
+    const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(422).json({
             errors : errors.array()[0].msg
         })
     }
+    
     const user = new User(req.body) /* an object user is created from a class User which is further created by mongoose we can access
     all the database methods mongoose provides us */
     user.save((err,user) =>{
@@ -65,16 +66,49 @@ exports.signin = (req, res) => {
   
       //send response to front end
       const { _id, name, email, role } = user;
-      return res.json({ token, user: { _id, name, email, role } });
+      return res.json({token, user: { _id, name, email, role } });
     });
   };
 
 
 
 exports.signout = (req,res)=>{
+    res.clearCookie("token")   //to clear all the cookies and this method is inside cookie-parser ,Also the cookie here is stored in token
     //res.send("user signout");  We can either send a response or a json object with key value pairs 
     res.json({
-        message: "User signout",
+        message: "User signout success",
     });
 };
 
+
+
+//protected routes
+exports.isSignedIn = expressJwt({     //the expressJwt already contains the next() method
+    secret: process.env.SECRET,
+    userProperty: "auth"   //auth conatins the _id assigned when signed in
+});
+
+
+//custom middlewares
+exports.isAuthenticated=(req,res,next)=>{
+  //req.profile is set from frontend 
+  //req.auth is set by the protected route when signed in which also contains the id
+  //now we check the assigned id and the id of the signed in user for a match 
+  //All 3 cond needs to be satisfied to allow user to make changes in his account
+let checker=req.profile && req.auth && req.profile._id ==req.auth._id;
+if(!checker){
+return res.status(403).json({
+    error:"ACCESS DENIED"
+});
+}
+   next();
+};
+
+exports.isAdmin = (req,res,next) =>  {
+    if(req.profile.role == 0){
+        return res.status(403).json({
+          error:"Not an Admin, Access Denied"
+        });
+    }
+    next();
+};

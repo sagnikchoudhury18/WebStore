@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const {check, validationResult} = require("express-validator")
-const {signup,signout,signin} = require("../controllers/auth")
+const {signup,signout,signin,isSignedIn} = require("../controllers/auth")
 
 /*router.get("/signout", (req,res)=>{
     res.send("user signout");
@@ -39,6 +39,10 @@ router.post(
   );
 
 router.get("/signout", signout); 
+
+router.get("/testroute",isSignedIn, (req,res)=>{ //Since this is not a custom middleware therefore we do not have the next
+    res.json(req.auth);  //auth contains the _id which is same as the id assigned when signed in
+});
 
 module.exports = router;
 /*To throw all the requests which means that there is some file existing where routes are defined and we need to throw 
