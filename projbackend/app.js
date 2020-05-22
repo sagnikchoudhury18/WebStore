@@ -11,6 +11,7 @@ const cors = require('cors');
 const authRoutes = require("./routes/auth")   //authRoutes contains the destination where routes are defined in auth.js in routes folder
 const userRoutes = require("./routes/user")
 const categoryRoutes = require("./routes/category")
+const productRoutes = require("./routes/product")
 
 /*NOTE: first parameter mongoose takes is the url string to connect to database where tshirt is name of Database.
  All variables are attached in process. We define the env variables in .env file. Also the .env file does not get uploaded to github */
@@ -34,6 +35,7 @@ app.use(cors());
 app.use("/api",authRoutes);
 app.use("/api",userRoutes);
 app.use("/api",categoryRoutes);
+app.use("/api",productRoutes);
 
 //PORT
 const port = process.env.PORT || 8000; //const port = 8000;
