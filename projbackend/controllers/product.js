@@ -142,7 +142,7 @@ exports.getAllProducts = (req,res) =>{
 
     Product.find()
     .select("-photo")  //while loading iif we do not want a particular item using -
-    .populate("category")
+    .populate("category")  //referencing a different collection
     .sort([[sortBy, "asc"]])
     .limit(limit)  //show the no. of products
     .exec((err, products) =>{
@@ -153,4 +153,36 @@ exports.getAllProducts = (req,res) =>{
         }
         res.json(products)
     })
+}
+
+//Middleware to update
+exports.getAllUniqueCategories = (req,res) => {
+    Product.distinct("category", {}, (err, category) =>{
+        if(err){
+            return res.status(400).json({
+                error: "No category found"
+            })
+        }
+        res.json(category)
+    })
+}
+
+exports.updateStock = (req, res, next) => {
+    let myOperations = req.body.order.products.map(prod => {
+        return {
+            updateOne: {
+                filter: {_id: prod._id},
+                update: {$inc: {stock: -prod.count, sold: +prod.count}}
+            }
+        }
+    })
+
+    Product.bulkWrite(myOperations, {}, (err,products) =>{
+        if(err){
+            return res.status(400).json({
+                error: "Bulk operation failed"
+            })
+        }
+        next();
+    });
 }
