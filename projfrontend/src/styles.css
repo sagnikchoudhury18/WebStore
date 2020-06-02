@@ -4,6 +4,10 @@
   border-radius: 50px;
 }
 
+li{
+margin-right: 15px;
+}
+
 body {
   background: #343a40;
 }
